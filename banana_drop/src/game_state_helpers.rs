@@ -5,14 +5,14 @@ pub mod game_state_helpers {
     use ruscii::spatial::Vec2;
 
     fn is_right_most_edge(current_pos: Vec2) -> bool {
-        if current_pos.x >= 16 {
+        if current_pos.x > 6 {
             return true;
         }
         false
     }
 
-    fn is_left_most_edge(current_pos: Vec2, dimension: Vec2) -> bool {
-        if current_pos.x < ((dimension.x) - dimension.x / 12 - 16) {
+    fn is_left_most_edge(current_pos: Vec2) -> bool {
+        if current_pos.x < 95 {
             return true;
         } else {
             return false;
@@ -30,7 +30,7 @@ pub mod game_state_helpers {
                     }
                 }
                 KeyEvent::Pressed(Key::Right) => {
-                    if is_left_most_edge(game_state.bowl.pos, game_state.dimension) {
+                    if is_left_most_edge(game_state.bowl.pos) {
                         game_state.bowl.pos.x = game_state.bowl.pos.x.saturating_add(3);
                     }
                 }
@@ -46,7 +46,7 @@ pub mod game_state_helpers {
                     }
                 }
                 Key::Right => {
-                    if is_left_most_edge(game_state.bowl.pos, game_state.dimension) {
+                    if is_left_most_edge(game_state.bowl.pos) {
                         game_state.bowl.pos.x = game_state.bowl.pos.x.saturating_add(3);
                     }
                 }
@@ -60,14 +60,15 @@ pub mod game_state_helpers {
         if game_state.score % 10 == 0 && game_state.score > 0 {
             game_state.level += 1; // Increase level every 10 points
         }
-
         // Spawn bananas periodically (e.g., every few frames)
-        if game_state.frame_count % 30 == 0 {
+        if game_state.frame_count % 50 == 0 {
             // Adjust spawn rate as needed
             game_state.spawn_bananas();
         }
 
-        game_state.update_bananas();
+        if game_state.frame_count % (30 - (game_state.level * 2)) == 0 {
+            game_state.update_bananas();
+        }
 
         game_state.check_collisions();
     }
