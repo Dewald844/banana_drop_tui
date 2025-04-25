@@ -53,7 +53,7 @@ fn main() {
                 .set_foreground(Color::Green)
                 .draw_text(&format!("Score : {}", game_state.score), Vec2::xy(4, 3))
                 .set_foreground(Color::Red)
-                .draw_text(&format!("Lives : {}", game_state.lives), Vec2::xy(4, 4))
+                .draw_text(&format!("Lives : {}", game_state.lives), Vec2::xy(20, 3))
                 .set_foreground(Color::White)
                 // Game border
                 .draw_rect(

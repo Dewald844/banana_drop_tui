@@ -178,12 +178,18 @@ pub mod game_state {
                 self.remaining_bananas = 15
             }
             // Spawn bananas periodically (e.g., every few frames)
-            if self.frame_count % 30 == 0 {
+            if self.level >= 30 {
                 self.spawn_bananas();
                 self.spawn_power_ups();
+            } else {
+                if self.frame_count % (30 - self.level) == 0 {
+                    self.spawn_bananas();
+                    self.spawn_power_ups();
+                }
             }
 
-            if self.level == 20 {
+            // check for new char's to spawn
+            if self.level >= 20 {
                 self.update_bananas();
                 self.update_power_ups();
             } else {
