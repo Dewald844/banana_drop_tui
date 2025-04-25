@@ -36,6 +36,14 @@ pub mod game_state {
             }
         }
 
+        pub fn reset(&mut self) {
+            self.score = 0;
+            self.lives = 5;
+            self.level = 0;
+            self.bananas = Vec::new();
+            self.frame_count = 0;
+        }
+
         pub fn spawn_bananas(&mut self) {
             let banana_count = self.level; // Number of bananas increases with level
             let mut rng = rand::thread_rng();
@@ -72,6 +80,24 @@ pub mod game_state {
                     true // Keep banana
                 }
             });
+        }
+
+        pub fn update_state(&mut self) {
+            self.frame_count += 1;
+            if self.score % 10 == 0 && self.score > 0 {
+                self.level += 1; // Increase level every 10 points
+            }
+            // Spawn bananas periodically (e.g., every few frames)
+            if self.frame_count % 50 == 0 {
+                // Adjust spawn rate as needed
+                self.spawn_bananas();
+            }
+
+            if self.frame_count % (30 - (self.level * 2)) == 0 {
+                self.update_bananas();
+            }
+
+            self.check_collisions();
         }
     }
 }

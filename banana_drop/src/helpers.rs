@@ -1,4 +1,4 @@
-pub mod game_state_helpers {
+pub mod helpers {
     use crate::game_state::game_state::GameState;
     use ruscii::app::State;
     use ruscii::keyboard::{Key, KeyEvent};
@@ -7,8 +7,9 @@ pub mod game_state_helpers {
     fn is_right_most_edge(current_pos: Vec2) -> bool {
         if current_pos.x > 6 {
             return true;
+        } else {
+            false
         }
-        false
     }
 
     fn is_left_most_edge(current_pos: Vec2) -> bool {
@@ -24,6 +25,11 @@ pub mod game_state_helpers {
             match key_event {
                 KeyEvent::Pressed(Key::Esc) => app_state.stop(),
                 KeyEvent::Pressed(Key::Q) => app_state.stop(),
+                KeyEvent::Pressed(Key::R) => {
+                    if game_state.lives == 0 {
+                        game_state.reset();
+                    }
+                }
                 KeyEvent::Pressed(Key::Left) => {
                     if is_right_most_edge(game_state.bowl.pos) {
                         game_state.bowl.pos.x = game_state.bowl.pos.x.saturating_sub(3);
@@ -53,23 +59,5 @@ pub mod game_state_helpers {
                 _ => (),
             }
         }
-    }
-
-    pub fn game_state_update(game_state: &mut GameState) {
-        game_state.frame_count += 1;
-        if game_state.score % 10 == 0 && game_state.score > 0 {
-            game_state.level += 1; // Increase level every 10 points
-        }
-        // Spawn bananas periodically (e.g., every few frames)
-        if game_state.frame_count % 50 == 0 {
-            // Adjust spawn rate as needed
-            game_state.spawn_bananas();
-        }
-
-        if game_state.frame_count % (30 - (game_state.level * 2)) == 0 {
-            game_state.update_bananas();
-        }
-
-        game_state.check_collisions();
     }
 }
