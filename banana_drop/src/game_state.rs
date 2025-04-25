@@ -11,6 +11,10 @@ pub mod game_state {
         pub speed: f64,
     }
 
+    pub struct PowerUp {
+        pub pos: Vec2
+    }
+
     pub struct GameState {
         pub dimension: Vec2,
         pub bowl: Bowl,
@@ -47,7 +51,7 @@ pub mod game_state {
             self.remaining_bananas = 15;
         }
 
-        pub fn spawn_bananas(&mut self) {
+        fn spawn_bananas(&mut self) {
             // Number of bananas increases with level
             if self.remaining_bananas > 0 {
                 let mut rng = rand::thread_rng();
@@ -60,14 +64,14 @@ pub mod game_state {
             }
         }
 
-        pub fn update_bananas(&mut self) {
+        fn update_bananas(&mut self) {
             self.bananas.retain_mut(|banana| {
                 banana.pos.y += banana.speed as i32; // Move banana down
                 banana.pos.y < 40 // Keep bananas within the screen
             });
         }
 
-        pub fn check_collisions(&mut self) {
+        fn check_collisions(&mut self) {
             self.bananas.retain(|banana| {
                 if (banana.pos.x >= self.bowl.pos.x
                     && banana.pos.x < self.bowl.pos.x + self.dimension.x / 12)
@@ -97,7 +101,7 @@ pub mod game_state {
                 self.spawn_bananas();
             }
 
-            if self.frame_count % 20 == 0 {
+            if self.frame_count % (20 - self.level) == 0 {
                 self.update_bananas();
             }
 

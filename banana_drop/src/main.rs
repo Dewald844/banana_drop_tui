@@ -10,7 +10,6 @@ mod helpers;
 
 fn main() {
     // Main setup calls
-    let mut fps_counter = FPSCounter::default();
     let mut app = App::default();
     let mut game_state = game_state::game_state::GameState::new();
 
@@ -18,7 +17,6 @@ fn main() {
         keyboard_event_handlers(app_state, &mut game_state);
         if game_state.lives > 0 {
             game_state.update_state();
-            fps_counter.update();
 
             for banana in &game_state.bananas {
                 Pencil::new(window.canvas_mut())

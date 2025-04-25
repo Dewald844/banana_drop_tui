@@ -25,3 +25,7 @@
 - <- -> Arrows keys to move left and right
 - Q to quit the game
 - R to Restart after death
+
+### Power ups (TODO)
+- "_" Extend bowl
+- "+" 1up
