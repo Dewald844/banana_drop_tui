@@ -2,8 +2,8 @@ use ruscii::app::{App, State};
 use ruscii::terminal::{Color, Window};
 use ruscii::drawing::{Pencil, RectCharset};
 use ruscii::keyboard::{KeyEvent, Key};
-use ruscii::spatial::{Vec2};
-use ruscii::gui::{FPSCounter};
+use ruscii::spatial::Vec2;
+use ruscii::gui::FPSCounter;
 
 mod game_state;
 
@@ -89,8 +89,8 @@ fn main() {
         }
 
         Pencil::new(window.canvas_mut())
-            .draw_text(&format!("＄: {}", game_state.score), Vec2::xy(1, 2))
-            .draw_text(&format!("❤️ {}", game_state.lives), Vec2::xy(10, 2))
+            .draw_text(&format!("Score: {}", game_state.score), Vec2::xy(1, 2))
+            .draw_text(&format!("Lives {}", game_state.lives), Vec2::xy(10, 2))
             .set_foreground(Color::White)
             .draw_hline('\'', Vec2 { x: (15), y: (4) }, game_state.dimension.x - 30)
             .set_foreground(Color::Red)

@@ -1,6 +1,6 @@
 pub mod game_state {
 
-    use ruscii::spatial::{Vec2};
+    use ruscii::spatial::Vec2;
     use rand::Rng;
     pub struct Bowl {
         pub pos: Vec2
@@ -57,8 +57,7 @@ pub mod game_state {
         pub fn check_collisions(&mut self) {
             self.bananas.retain(|banana| {
                 if (banana.pos.x >= self.bowl.pos.x && banana.pos.x < self.bowl.pos.x + self.dimension.x / 12)
-                    && (banana.pos.y >= self.bowl.pos.y && banana.pos.y < self.bowl.pos.y + 2)
-                {
+                    && (banana.pos.y >= self.bowl.pos.y && banana.pos.y < self.bowl.pos.y + 2) {
                     self.score += 1; // Increase score
                     false // Remove banana
                 } 
