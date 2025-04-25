@@ -1,84 +1,21 @@
 use ruscii::app::{App, State};
-use ruscii::terminal::{Color, Window};
 use ruscii::drawing::{Pencil, RectCharset};
-use ruscii::keyboard::{KeyEvent, Key};
-use ruscii::spatial::Vec2;
 use ruscii::gui::FPSCounter;
+use ruscii::spatial::Vec2;
+use ruscii::terminal::{Color, Window};
 
 mod game_state;
-
-fn is_right_most_edge(current_pos : Vec2) -> bool {
-    if current_pos.x >= 16 {
-        return true;
-    }
-    false
-}
-
-fn is_left_most_edge(current_pos : Vec2, dimension : Vec2) -> bool {
-    if current_pos.x < ((dimension.x) - dimension.x/12 - 16) {
-        return true;
-    } else {
-        return false;
-    }
-}
+mod game_state_helpers;
 
 fn main() {
-    
     let mut fps_counter = FPSCounter::default();
     let mut app = App::default();
 
     let mut game_state = game_state::game_state::GameState::new(app.window().size());
 
     app.run(|app_state: &mut State, window: &mut Window| {
-
-        game_state.frame_count += 1;
-
-        if game_state.score % 10 == 0 && game_state.score > 0 {
-            game_state.level += 1; // Increase level every 10 points
-        }
-
-        // Spawn bananas periodically (e.g., every few frames)
-        if game_state.frame_count % 30 == 0 { // Adjust spawn rate as needed
-            game_state.spawn_bananas();
-        }
-
-        game_state.update_bananas();
-
-        game_state.check_collisions();
-
-        for key_event in app_state.keyboard().last_key_events() {
-            match key_event {
-                KeyEvent::Pressed(Key::Esc) => app_state.stop(),
-                KeyEvent::Pressed(Key::Q) => app_state.stop(),
-                KeyEvent::Pressed(Key::Left) => {
-                    if is_right_most_edge(game_state.bowl.pos) {
-                        game_state.bowl.pos.x = game_state.bowl.pos.x.saturating_sub(3);
-                    }
-                }
-                KeyEvent::Pressed(Key::Right) => {
-                    if is_left_most_edge(game_state.bowl.pos, game_state.dimension) {
-                        game_state.bowl.pos.x = game_state.bowl.pos.x.saturating_add(3);
-                    }
-                }
-                _ => (),
-            }
-        }
-
-        for key_down in app_state.keyboard().get_keys_down() {
-            match key_down {
-                Key::Left => {
-                    if is_right_most_edge(game_state.bowl.pos) {
-                        game_state.bowl.pos.x = game_state.bowl.pos.x.saturating_sub(3);
-                    }
-                }
-                Key::Right => {
-                    if is_left_most_edge(game_state.bowl.pos, game_state.dimension) {
-                        game_state.bowl.pos.x = game_state.bowl.pos.x.saturating_add(3);
-                    }
-                }
-                _ => (),
-            }
-        }
+        game_state_helpers::game_state_helpers::keyboard_event_handlers(app_state, &mut game_state);
+        game_state_helpers::game_state_helpers::game_state_update(&mut game_state);
 
         fps_counter.update();
 
@@ -97,9 +34,19 @@ fn main() {
             .draw_rect(
                 &RectCharset::simple_round_lines(),
                 game_state.bowl.pos,
-                Vec2 { x: (game_state.dimension.x/12), y:(2) },
-            ) 
+                Vec2 {
+                    x: (game_state.dimension.x / 12),
+                    y: (2),
+                },
+            )
             .set_foreground(Color::White)
-            .draw_hline('\'', Vec2 { x: (15), y: (game_state.dimension.y-2) }, game_state.dimension.x - 30);
+            .draw_hline(
+                '\'',
+                Vec2 {
+                    x: (15),
+                    y: (game_state.dimension.y - 2),
+                },
+                game_state.dimension.x - 30,
+            );
     });
 }
