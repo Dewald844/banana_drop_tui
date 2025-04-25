@@ -25,3 +25,10 @@
 - <- -> Arrows keys to move left and right
 - Q to quit the game
 - R to Restart after death
+
+---
+
+### Power ups
+- "+" Add extra live
+- "=" Extends bowl width
+- "-" Decreses bowl width

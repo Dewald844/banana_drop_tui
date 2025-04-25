@@ -12,8 +12,8 @@ pub mod helpers {
         }
     }
 
-    fn is_left_most_edge(current_pos: Vec2) -> bool {
-        if current_pos.x < 95 {
+    fn is_left_most_edge(current_pos: Vec2, bowl_size: i32) -> bool {
+        if (current_pos.x + bowl_size) < 101 {
             return true;
         } else {
             return false;
@@ -36,7 +36,7 @@ pub mod helpers {
                     }
                 }
                 KeyEvent::Pressed(Key::Right) => {
-                    if is_left_most_edge(game_state.bowl.pos) {
+                    if is_left_most_edge(game_state.bowl.pos, game_state.bowl.size) {
                         game_state.bowl.pos.x = game_state.bowl.pos.x.saturating_add(3);
                     }
                 }
@@ -52,7 +52,7 @@ pub mod helpers {
                     }
                 }
                 Key::Right => {
-                    if is_left_most_edge(game_state.bowl.pos) {
+                    if is_left_most_edge(game_state.bowl.pos, game_state.bowl.size) {
                         game_state.bowl.pos.x = game_state.bowl.pos.x.saturating_add(3);
                     }
                 }
