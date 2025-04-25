@@ -22,7 +22,7 @@ fn main() {
             for banana in &game_state.bananas {
                 Pencil::new(window.canvas_mut())
                     .set_foreground(Color::Yellow)
-                    .draw_text("0", banana.pos);
+                    .draw_text("J", banana.pos);
             }
 
             for power_up in &game_state.power_ups {
