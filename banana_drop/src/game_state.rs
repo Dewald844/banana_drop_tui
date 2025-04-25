@@ -19,6 +19,7 @@ pub mod game_state {
         pub level: u32,
         pub bananas: Vec<Banana>,
         pub frame_count: u32,
+        pub remaining_bananas: u32,
     }
 
     impl GameState {
@@ -33,6 +34,7 @@ pub mod game_state {
                 level: 1,
                 bananas: Vec::new(),
                 frame_count: 0,
+                remaining_bananas: 15,
             }
         }
 
@@ -42,18 +44,19 @@ pub mod game_state {
             self.level = 0;
             self.bananas = Vec::new();
             self.frame_count = 0;
+            self.remaining_bananas = 15;
         }
 
         pub fn spawn_bananas(&mut self) {
-            let banana_count = self.level; // Number of bananas increases with level
-            let mut rng = rand::thread_rng();
-
-            for _ in 0..banana_count {
+            // Number of bananas increases with level
+            if self.remaining_bananas > 0 {
+                let mut rng = rand::thread_rng();
                 let x_pos = rng.gen_range(5..90); // Random x position
                 self.bananas.push(Banana {
-                    pos: Vec2::xy(x_pos, 5),  // Start under top horizontal line
-                    speed: self.level as f64, // Speed increases with level
+                    pos: Vec2::xy(x_pos, 5), // Start under top horizontal line
+                    speed: 1.0,              // Speed increases with level
                 });
+                self.remaining_bananas -= 1;
             }
         }
 
@@ -70,6 +73,7 @@ pub mod game_state {
                     && banana.pos.x < self.bowl.pos.x + self.dimension.x / 12)
                     && (banana.pos.y >= self.bowl.pos.y && banana.pos.y < self.bowl.pos.y + 2)
                 {
+                    // banana was caught by bowl
                     self.score += 1; // Increase score
                     false // Remove banana
                 } else if banana.pos.y >= 35 {
@@ -86,14 +90,14 @@ pub mod game_state {
             self.frame_count += 1;
             if self.score % 10 == 0 && self.score > 0 {
                 self.level += 1; // Increase level every 10 points
+                self.remaining_bananas = self.level * 10
             }
             // Spawn bananas periodically (e.g., every few frames)
-            if self.frame_count % 50 == 0 {
-                // Adjust spawn rate as needed
+            if self.frame_count % 30 == 0 {
                 self.spawn_bananas();
             }
 
-            if self.frame_count % (30 - (self.level * 2)) == 0 {
+            if self.frame_count % 20 == 0 {
                 self.update_bananas();
             }
 

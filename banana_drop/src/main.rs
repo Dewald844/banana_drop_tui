@@ -16,19 +16,24 @@ fn main() {
 
     app.run(|app_state: &mut State, window: &mut Window| {
         keyboard_event_handlers(app_state, &mut game_state);
-        game_state.update_state();
-        fps_counter.update();
-
-        for banana in &game_state.bananas {
-            Pencil::new(window.canvas_mut())
-                .set_foreground(Color::Yellow)
-                .draw_text("0", banana.pos);
-        }
-
         if game_state.lives > 0 {
+            game_state.update_state();
+            fps_counter.update();
+
+            for banana in &game_state.bananas {
+                Pencil::new(window.canvas_mut())
+                    .set_foreground(Color::Yellow)
+                    .draw_text("0", banana.pos);
+            }
+
             Pencil::new(window.canvas_mut())
-                .draw_text(&format!("Score : {}", game_state.score), Vec2::xy(1, 2))
-                .draw_text(&format!("<3 : {}", game_state.lives), Vec2::xy(10, 2))
+                .set_foreground(Color::White)
+                .draw_text(&format!("Press Q to quit"), Vec2::xy(1, 1))
+                .draw_text(&format!("Move with arrow keys <-  ->"), Vec2::xy(1, 2))
+                .set_foreground(Color::Green)
+                .draw_text(&format!("Score : {}", game_state.score), Vec2::xy(1, 3))
+                .set_foreground(Color::Red)
+                .draw_text(&format!("Lives : {}", game_state.lives), Vec2::xy(1, 4))
                 .set_foreground(Color::Blue)
                 .draw_rect(
                     &RectCharset::double_lines(),
@@ -46,7 +51,14 @@ fn main() {
                 )
                 .set_foreground(Color::White);
         } else {
-            Pencil::new(window.canvas_mut()).draw_text("Game over", Vec2::xy(10, 10));
+            Pencil::new(window.canvas_mut())
+                .set_foreground(Color::Red)
+                .draw_text("Game over", Vec2::xy(1, 2))
+                .set_foreground(Color::Green)
+                .draw_text(&format!("Score : {}", game_state.score), Vec2::xy(1, 3))
+                .set_foreground(Color::White)
+                .draw_text("Press R to restart", Vec2::xy(1, 4))
+                .draw_text("Press Q to quit", Vec2::xy(1, 5));
         }
     });
 }
