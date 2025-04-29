@@ -36,4 +36,4 @@
 ### Power ups
 - ```+``` Add extra live
 - ```=``` Extends bowl width
-- ```-``` Decreses bowl width
+- ```-``` Decreases bowl width
