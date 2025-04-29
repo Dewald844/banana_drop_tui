@@ -79,6 +79,7 @@ pub mod game_state {
             self.lives = 5;
             self.level = 0;
             self.bananas = Vec::new();
+            self.power_ups = Vec::new();
             self.frame_count = 0;
             self.remaining_bananas = 15;
         }

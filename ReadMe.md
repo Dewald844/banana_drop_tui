@@ -6,12 +6,17 @@
 
 ---
 
-#### Prerequisites
+- [Windows download](https://drive.google.com/file/d/1NdZitI1DVHUldrrp35ea2G572Z1zsXfC/view?usp=drive_link)
+- [Mac OS (arm)](https://drive.google.com/file/d/1xxaDuHbiJ877wgPw7_hDi1oEWh8Fbm7T/view?usp=drive_link)
+
+---
+
+#### Development Prerequisites
 - Rust compiler service
 
 ---
 
-#### Setup
+#### Development Setup
 - Clone this repo
 - Inside cloned repo ```cd banana_drop```
 - ```cargo build```
