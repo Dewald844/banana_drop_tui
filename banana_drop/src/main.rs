@@ -32,17 +32,17 @@ fn main() {
                         pencil
                             .set_foreground(Color::Blue)
                             .draw_text("=", power_up.pos);
-                    }
+                    },
                     PowerType::OneUp => {
                         pencil
                             .set_foreground(Color::Green)
                             .draw_text("+", power_up.pos);
-                    }
+                    },
                     PowerType::Shrink => {
                         pencil
                             .set_foreground(Color::Red)
                             .draw_text("-", power_up.pos);
-                    }
+                    },
                 }
             }
 
@@ -83,6 +83,4 @@ fn main() {
                 .draw_text("Press Q to quit", Vec2::xy(1, 5));
         }
     });
-
-    println!("{:#?}", game_state);
 }
