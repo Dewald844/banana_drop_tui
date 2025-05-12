@@ -15,23 +15,22 @@ pub mod game_state {
         pub speed: f64,
     }
 
-    #[derive(Debug)]
+    #[derive(Debug, Clone, Copy)]
     pub enum PowerType {
         OneUp,
         Extend,
         Shrink,
     }
-    
+
     impl PowerType {
         pub fn new() -> PowerType {
             let mut rng = rand::thread_rng();
             let power_index = rng.gen_range(1..4);
-            if power_index == 1 {
-                return PowerType::Extend;
-            } else if power_index == 2 {
-                return PowerType::OneUp;
-            } else {
-                return PowerType::Shrink;
+
+            match power_index {
+                1 => PowerType::Extend,
+                2 => PowerType::OneUp,
+                _ => PowerType::Shrink,
             }
         }
     }
@@ -125,50 +124,58 @@ pub mod game_state {
         }
 
         pub fn check_power_up_collisions(&mut self) {
+            // Extract bowl information before the retain call
+            let bowl_pos = self.bowl.pos;
+            let bowl_size = self.bowl.size;
+
+            // Use a separate vector to track which types to process
+            let mut power_up_actions = Vec::new();
+
             self.power_ups.retain(|power_up| {
-                if (power_up.pos.x >= self.bowl.pos.x
-                    && power_up.pos.x < (self.bowl.pos.x + self.bowl.size))
-                    && (power_up.pos.y >= self.bowl.pos.y && power_up.pos.y < self.bowl.pos.y + 2)
-                {
-                    // banana was caught by bowl
-                    match power_up.power_type {
-                        PowerType::Extend => {
-                            self.bowl.size += 5;
-                        }
-                        PowerType::OneUp => {
-                            self.lives += 1;
-                        }
-                        PowerType::Shrink => {
-                            self.bowl.size -= 5;
-                        }
-                    }
+                if Self::is_collision(&bowl_pos, bowl_size, &power_up.pos) {
+                    // Store the action to perform after the retain call
+                    power_up_actions.push(power_up.power_type);
                     false // Remove power up
-                } else if power_up.pos.y >= 35 {
-                    // power up reached the bottom
-                    false
                 } else {
-                    true // Keep power up
+                    // power up reached the bottom when pos y >= 35
+                    power_up.pos.y < 35
                 }
             });
+
+            // Process the collected actions
+            for power_type in power_up_actions {
+                match power_type {
+                    PowerType::Extend => self.bowl.size += 5,
+                    PowerType::OneUp => self.lives += 1,
+                    PowerType::Shrink => self.bowl.size -= 5,
+                }
+            }
         }
 
         pub fn check_banana_collisions(&mut self) {
+            // Extract bowl information before the retain call
+            let bowl_pos = self.bowl.pos;
+            let bowl_size = self.bowl.size;
+            let mut caught_count = 0;
+            let mut missed_count = 0;
+
             self.bananas.retain(|banana| {
-                if (banana.pos.x >= self.bowl.pos.x
-                    && banana.pos.x < (self.bowl.pos.x + self.bowl.size))
-                    && (banana.pos.y >= self.bowl.pos.y && banana.pos.y < self.bowl.pos.y + 2)
-                {
+                if Self::is_collision(&bowl_pos, bowl_size, &banana.pos) {
                     // banana was caught by bowl
-                    self.score += 1; // Increase score
+                    caught_count += 1;
                     false // Remove banana
                 } else if banana.pos.y >= 35 {
                     // banana reached the bottom
-                    self.lives -= 1;
+                    missed_count += 1;
                     false
                 } else {
                     true // Keep banana
                 }
             });
+
+            // Update scores and lives outside the retain closure
+            self.score += caught_count;
+            self.lives = self.lives.saturating_sub(missed_count);
         }
 
         pub fn update_state(&mut self) {
@@ -178,30 +185,27 @@ pub mod game_state {
                 self.remaining_power_ups = 1; // Spawn powerup
                 self.remaining_bananas = 15
             }
+
             // Spawn bananas periodically (e.g., every few frames)
-            if self.level >= 30 {
+            if self.level >= 30 || self.frame_count % (30 - self.level) == 0 {
                 self.spawn_bananas();
                 self.spawn_power_ups();
-            } else {
-                if self.frame_count % (30 - self.level) == 0 {
-                    self.spawn_bananas();
-                    self.spawn_power_ups();
-                }
             }
 
             // check for new char's to spawn
-            if self.level >= 20 {
+            if self.level >= 20 || self.frame_count % (20 - self.level) == 0 {
                 self.update_bananas();
                 self.update_power_ups();
-            } else {
-                if self.frame_count % (20 - self.level) == 0 {
-                    self.update_bananas();
-                    self.update_power_ups();
-                }
             }
 
             self.check_banana_collisions();
             self.check_power_up_collisions();
+        }
+
+        // Common collision detection function
+        fn is_collision(bowl_pos: &Vec2, bowl_size: i32, obj_pos: &Vec2) -> bool {
+            (obj_pos.x >= bowl_pos.x && obj_pos.x < (bowl_pos.x + bowl_size))
+                && (obj_pos.y >= bowl_pos.y && obj_pos.y < bowl_pos.y + 2)
         }
     }
 }
