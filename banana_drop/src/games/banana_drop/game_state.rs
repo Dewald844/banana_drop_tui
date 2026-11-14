@@ -1,7 +1,7 @@
 pub mod game_state {
-
     use rand::Rng;
     use ruscii::spatial::Vec2;
+
     pub struct Bowl {
         pub pos: Vec2,
     }
@@ -12,7 +12,7 @@ pub mod game_state {
     }
 
     pub struct PowerUp {
-        pub pos: Vec2
+        pub pos: Vec2,
     }
 
     pub struct GameState {

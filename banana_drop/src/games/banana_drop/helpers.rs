@@ -1,30 +1,21 @@
 pub mod helpers {
-    use crate::game_state::game_state::GameState;
+    use super::super::game_state::game_state::GameState;
     use ruscii::app::State;
     use ruscii::keyboard::{Key, KeyEvent};
     use ruscii::spatial::Vec2;
 
     fn is_right_most_edge(current_pos: Vec2) -> bool {
-        if current_pos.x > 6 {
-            return true;
-        } else {
-            false
-        }
+        current_pos.x > 6
     }
 
     fn is_left_most_edge(current_pos: Vec2) -> bool {
-        if current_pos.x < 95 {
-            return true;
-        } else {
-            return false;
-        }
+        current_pos.x < 95
     }
 
-    pub fn keyboard_event_handlers(app_state: &State, game_state: &mut GameState) -> () {
+    pub fn keyboard_event_handlers(app_state: &State, game_state: &mut GameState) -> bool {
         for key_event in app_state.keyboard().last_key_events() {
             match key_event {
-                KeyEvent::Pressed(Key::Esc) => app_state.stop(),
-                KeyEvent::Pressed(Key::Q) => app_state.stop(),
+                KeyEvent::Pressed(Key::Esc) | KeyEvent::Pressed(Key::Q) => return true,
                 KeyEvent::Pressed(Key::R) => {
                     if game_state.lives == 0 {
                         game_state.reset();
@@ -59,5 +50,6 @@ pub mod helpers {
                 _ => (),
             }
         }
+        false
     }
 }
