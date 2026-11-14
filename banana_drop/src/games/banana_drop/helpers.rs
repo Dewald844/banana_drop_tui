@@ -37,15 +37,11 @@ pub mod helpers {
 
         for key_down in app_state.keyboard().get_keys_down() {
             match key_down {
-                Key::Left => {
-                    if is_right_most_edge(game_state.bowl.pos) {
-                        game_state.bowl.pos.x = game_state.bowl.pos.x.saturating_sub(3);
-                    }
+                Key::Left if is_right_most_edge(game_state.bowl.pos) => {
+                    game_state.bowl.pos.x = game_state.bowl.pos.x.saturating_sub(3);
                 }
-                Key::Right => {
-                    if is_left_most_edge(game_state.bowl.pos) {
-                        game_state.bowl.pos.x = game_state.bowl.pos.x.saturating_add(3);
-                    }
+                Key::Right if is_left_most_edge(game_state.bowl.pos, game_state.bowl.size) => {
+                    game_state.bowl.pos.x = game_state.bowl.pos.x.saturating_add(3);
                 }
                 _ => (),
             }
