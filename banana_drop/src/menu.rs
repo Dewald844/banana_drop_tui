@@ -92,6 +92,21 @@ mod tests {
     }
 
     #[test]
+    fn snake_is_selectable_from_the_real_menu() {
+        let mut menu = Menu::new();
+        menu.handle_key(Key::Down);
+        menu.handle_key(Key::Down);
+        assert_eq!(
+            menu.handle_key(Key::Enter),
+            MenuAction::Start(GameId::Snake)
+        );
+        assert!(matches!(
+            crate::games::Game::new(GameId::Snake),
+            crate::games::Game::Snake(_)
+        ));
+    }
+
+    #[test]
     fn navigation_wraps_through_game_list() {
         static GAMES_FOR_TEST: &[(GameId, &str)] = &[
             (GameId::BananaDrop, "First"),

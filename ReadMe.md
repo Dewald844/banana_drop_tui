@@ -39,6 +39,13 @@
 - R to restart after winning or losing
 - Q or Esc to return to the menu
 
+#### Snake
+- Use a terminal at least 52 columns wide and 23 rows high
+- Space to start; arrow keys to turn
+- Eat food to grow and score; avoid the walls and your own body
+- R to restart after losing or winning
+- Q or Esc to return to the menu
+
 ### Adding games
 
 Each game lives in its own folder under `banana_drop/src/games`. Add the game
