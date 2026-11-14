@@ -1,4 +1,4 @@
-use crate::games::{GameId, GAMES};
+use crate::games::GameId;
 use ruscii::drawing::Pencil;
 use ruscii::keyboard::Key;
 use ruscii::spatial::Vec2;
@@ -20,7 +20,7 @@ impl Menu {
     pub fn new() -> Self {
         Self {
             selected: 0,
-            games: GAMES,
+            games: crate::games::GAMES,
         }
     }
 
@@ -75,6 +75,20 @@ mod tests {
         assert_eq!(menu.handle_key(Key::Q), MenuAction::Quit);
         assert_eq!(menu.handle_key(Key::Esc), MenuAction::Quit);
         assert_eq!(menu.handle_key(Key::Left), MenuAction::None);
+    }
+
+    #[test]
+    fn brick_breaker_is_selectable_from_the_real_menu() {
+        let mut menu = Menu::new();
+        assert_eq!(menu.handle_key(Key::Down), MenuAction::None);
+        assert_eq!(
+            menu.handle_key(Key::Enter),
+            MenuAction::Start(GameId::BrickBreaker)
+        );
+        assert!(matches!(
+            crate::games::Game::new(GameId::BrickBreaker),
+            crate::games::Game::BrickBreaker(_)
+        ));
     }
 
     #[test]

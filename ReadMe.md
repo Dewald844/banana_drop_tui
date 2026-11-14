@@ -31,6 +31,14 @@
 - Q or Esc to return to the menu
 - R to restart after death
 
+#### Brick Breaker
+- Use a terminal at least 62 columns wide and 23 rows high
+- Left and Right arrow keys to move the paddle
+- Space to launch the ball at the start and after losing a life
+- Break all bricks to win; you have three lives
+- R to restart after winning or losing
+- Q or Esc to return to the menu
+
 ### Adding games
 
 Each game lives in its own folder under `banana_drop/src/games`. Add the game

@@ -11,10 +11,6 @@ pub mod game_state {
         pub speed: f64,
     }
 
-    pub struct PowerUp {
-        pub pos: Vec2,
-    }
-
     pub struct GameState {
         pub dimension: Vec2,
         pub bowl: Bowl,
